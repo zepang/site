@@ -78,3 +78,124 @@ npm run start
 
 打开页面之后给我们推荐了三个链接，在我们需要的时候可以参考下
 
+## tailwindcss和样式
+
+这里我选择使用postcss预处理器来引入tailwindcss和处理自定义的样式
+
+参考文档：
+
+- https://remix.run/docs/en/v1/guides/styling#tailwind
+- https://remix.run/docs/en/v1/guides/styling#postcss
+
+详细的说明请看上述的文档吧，我简述下配置的过程。安装依赖如下：
+
+```sh
+npm add -D concurrently tailwindcss postcss-cli postcss autoprefixer postcss-import 
+```
+
+在根目录添加两个配置文件`postcss.config.js`，`tailwind.config.js`：
+
+```js
+// postcss.config.js
+module.exports = {
+  plugins: [
+    require('postcss-import'),
+    require('tailwindcss/nesting'),
+    require('tailwindcss'),
+    require('autoprefixer'),
+  ]
+}
+```
+
+```js
+// tailwind.config.js
+module.exports = {
+  content: ['./app/**/*.{ts,tsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+
+```
+
+创建目录`styles`和文件`styles/tailwind.css`，修改`package.json`的命令如下：
+
+![](imgs/2022-01-03-17-38-35.png)
+
+运行命令：
+
+```sh
+npm run dev
+```
+
+新增目录文件：
+
+```sh
+app/styles
+└── tailwind.css
+```
+
+在`app/root.tsx`中引入样式`tailwind.css`：
+
+![](imgs/2022-01-03-17-41-14.png)
+
+上述声明的 `links` 函数返回的配置，都会在 `<Links>` 组件部位引入到页面中。`app/root.tsx`文件中如下位置：
+
+![](imgs/2022-01-03-17-44-38.png)
+
+我们查看下样式生效后的页面，如下：
+
+![](imgs/2022-01-03-17-47-08.png)
+
+接着，我们创建文件`app/routes/posts/index.tsx`:
+
+```tsx
+import { LinksFunction } from 'remix';
+import styles from '../../styles/routes/posts/index.css';
+
+export const links: LinksFunction = () => {
+  return [{ rel: "stylesheet", href: styles }]
+}
+
+export default function Post () {
+  return (
+    <h1 className="text-5xl">文章列表</h1>
+  )
+}
+```
+
+同时创建文件`styles/routes/index.css`，`styles/routes/posts/index.css`：
+
+```css
+/* styles/routes/index.css */
+body {
+  @apply bg-orange-400;
+}
+```
+
+```css
+/* styles/routes/posts/index.css */
+body {
+  @apply bg-green-400;
+}
+```
+
+重新运行命令`npm run dev`，打开控制台，并查看页面：
+
+- 首页
+
+![](imgs/2022-01-03-18-01-57.png)
+
+- 文章列表页
+
+![](imgs/2022-01-03-18-02-33.png)
+
+通过对比我们可以发现：
+
+- `tailwind.css`作为在`app/root.tsx`中引入的文件，在首页和文章列表页面都会加载
+- `styles/routes/index.css`只会在首页进行加载，`styles/routes/posts/index.css`只会在文章列表页面进行加载
+
+这是 remix 隔离样式的方式
+
+最后，我们需要把postcss输出的目录添加到`.gitignore`文件中，这部分的内容是不需要提交到代码库的
