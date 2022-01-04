@@ -1,3 +1,10 @@
+import { LinksFunction } from 'remix';
+import styles from '../styles/routes/index.css';
+
+export const links: LinksFunction = () => {
+  return [{ rel: "stylesheet", href: styles }]
+}
+
 export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
@@ -24,6 +31,11 @@ export default function Index() {
         <li>
           <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
             Remix Docs
+          </a>
+        </li>
+        <li>
+          <a href="/posts" rel="noreferrer">
+            文章列表
           </a>
         </li>
       </ul>
