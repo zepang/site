@@ -1,3 +1,8 @@
 body {
-  @apply bg-orange-400;
+  @apply bg-green-800;
+  background-image: url('/images/brick-wall-dark.png');
+}
+
+.menus-wrapper {
+  background-color: rgb(0,0,0, .5);
 }

@@ -1,4 +1,4 @@
-import { LinksFunction } from 'remix';
+import { LinksFunction, Link, useLocation, Outlet } from 'remix';
 import styles from '../styles/routes/index.css';
 
 export const links: LinksFunction = () => {
@@ -6,39 +6,48 @@ export const links: LinksFunction = () => {
 }
 
 export default function Index() {
+  const menus = [
+    {
+      title: '技术学习',
+      url: 'posts'
+    },
+    {
+      title: '生活思考',
+      url: 'thought'
+    },
+    {
+      title: '兴趣爱好',
+      url: 'interesting'
+    },
+    {
+      title: '收藏分享',
+      url: 'collection'
+    }
+  ]
+  
+  let layoutCls = 'w-screen h-screen flex flex-row'
+  const location = useLocation()
+  const isHomePage = location.pathname === '/'
+
+  if (isHomePage) {
+    layoutCls = 'w-screen h-screen flex flex-col items-center justify-center'
+  }
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <h1>Welcome to Remix</h1>
-      <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
-          >
-            15m Quickstart Blog Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
-          >
-            Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-        <li>
-          <a href="/posts" rel="noreferrer">
-            文章列表
-          </a>
-        </li>
-      </ul>
+    <div className={layoutCls} style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
+      {/* <h1 className="text-lg py-4">Welcome! </h1> */}
+      <div className="menus-wrapper rounded-lg shadow-lg">
+        <ul className="p-2 md:flex">
+          {
+            menus.map(({ title, url }) => (
+              <li key={url} className="py-2">
+                <button className="btn btn-primary text-lg px-6">
+                  <Link to={url} className="hover:underline underline-offset-4 stroke-cyan-500 stroke-4 tracking-wider text-slate-400">{title}</Link>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
   );
 }
