@@ -1,12 +1,13 @@
-import { LinksFunction } from 'remix';
-import styles from '../../styles/routes/posts/index.css';
-
-export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: styles }]
-}
+import { LinksFunction, Outlet, Link, useLocation } from 'remix';
 
 export default function Post () {
   return (
-    <h1 className="text-5xl">文章列表</h1>
+    <div>
+      <h1 className="text-5xl">文章列表</h1>
+      <Link to="new">post new</Link>
+      <main>
+        <Outlet />
+      </main>
+    </div>
   )
 }
